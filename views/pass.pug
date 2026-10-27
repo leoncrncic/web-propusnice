@@ -1,0 +1,45 @@
+
+doctype html
+html(lang="hr")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Digitalna propusnica
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+      }
+      .active { color: green; }
+      .cancelled { color: red; }
+
+  body
+    .card
+      h1 Digitalna propusnica
+
+      p
+        strong Ime i prezime:
+        |  #{pass.name}
+
+      p
+        strong Dokument:
+        |  #{pass.document}
+
+      p
+        strong Vrijeme izdavanja:
+        |  #{pass.issuedAt.toISOString()}
+
+      p
+        strong Status:
+        if pass.status === "ACTIVE"
+          span.active  ACTIVE
+        else
+          span.cancelled  CANCELLED
