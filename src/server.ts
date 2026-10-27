@@ -26,14 +26,14 @@ app.get("/", async (req, res) => {
     const total = Number(result.rows[0].total);
     const active = Number(result.rows[0].active);
 
-    res.send(
-      `Ukupno propusnica: ${total}, Aktivnih propusnica: ${active}`
-    );
+    res.render("home", { total, active });
+
   } catch (error) {
-    console.error("Greška pri dohvaćanju propusnica:", error);
+    console.error("Greška pri dohvaćanju statistike:", error);
     res.status(500).send("Greška na serveru.");
   }
 });
+
 
 
 app.get("/info/:id", async (req, res) => {
