@@ -5,6 +5,8 @@ import { getPassById } from "./passes.js";
 import { isValidUuid } from "./validation.js";
 import path from "node:path";
 import { authMiddleware, requiresAuth } from "./auth.js";
+import { adminRouter } from "./admin.js";
+import { apiRouter } from "./api.js";
 
 
 const app = express();
@@ -14,6 +16,9 @@ const PORT = 3000;
 app.set("view engine", "pug");
 app.set("views", path.resolve("views"));
 app.use(authMiddleware);
+app.use("/admin", adminRouter);
+app.use(express.json());
+app.use(apiRouter);
 
 
 app.get("/", async (req, res) => {
@@ -84,6 +89,8 @@ app.get("/profile", requiresAuth(), (req, res) => {
 });
 
 
-app.listen(PORT, () => {
-  console.log(`Server radi na http://localhost:${PORT}`);
+const port = Number(process.env.PORT) || 3000;
+
+app.listen(port, () => {
+  console.log(`Server radi na portu ${port}`);
 });

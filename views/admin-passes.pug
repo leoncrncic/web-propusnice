@@ -1,0 +1,48 @@
+doctype html
+html(lang="hr")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Upravljanje propusnicama
+
+  body
+    h1 Upravljanje propusnicama
+
+    a(href="/") Početna stranica
+
+    if passes.length === 0
+      p Nema izdanih propusnica.
+    else
+      table(border="1", cellpadding="8")
+        thead
+          tr
+            th Ime i prezime
+            th Dokument
+            th Datum izdavanja
+            th Status
+            th Akcije
+
+        tbody
+          each pass in passes
+            tr
+              td= pass.name
+              td= pass.document
+              td= new Date(pass.issued_at).toLocaleString("hr-HR")
+              td= pass.status
+
+              td
+                a(href="/info/" + pass.id) Pregled
+
+                if pass.status === "ACTIVE"
+                  form(
+                    action="/admin/passes/" + pass.id + "/cancel"
+                    method="POST"
+                  )
+                    button(type="submit") Poništi
+
+                form(
+                  action="/admin/passes/" + pass.id + "/delete"
+                  method="POST"
+                  onsubmit="return confirm('Trajno obrisati propusnicu?')"
+                )
+                  button(type="submit") Obriši
