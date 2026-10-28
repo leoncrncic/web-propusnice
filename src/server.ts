@@ -10,7 +10,6 @@ import { apiRouter } from "./api.js";
 
 
 const app = express();
-const PORT = 3000;
 
 
 app.set("view engine", "pug");
@@ -76,6 +75,13 @@ app.get("/info/:id", async (req, res) => {
 
 
 app.post("/logout", (req, res) => {
+  // Odbij POST odjavu pokrenutu s drugih stranica (CSRF zaštita).
+  const allowedOrigin = new URL(process.env.BASE_URL!).origin;
+  if (req.get("origin") !== allowedOrigin) {
+    res.sendStatus(403);
+    return;
+  }
+
   res.oidc.logout({
     returnTo: process.env.BASE_URL
   });
