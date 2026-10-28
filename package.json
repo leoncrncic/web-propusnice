@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node --env-file=.env dist/server.js",
-    "dev": "npm run build && npm start"
+    "start": "node dist/server.js",
+    "start:local": "node --env-file=.env dist/server.js",
+    "dev": "npm run build && npm run start:local"
   },
   "keywords": [],
   "author": "",
