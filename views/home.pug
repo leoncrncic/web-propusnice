@@ -42,3 +42,20 @@ html(lang="hr")
           h2= active
           p Aktivnih propusnica
 
+      if isAuthenticated
+        h2 Korisnički račun
+        p Prijavljeni ste kao: #{user.email || user.name || "Korisnik"}
+
+        p
+          a(href="/profile") Moj profil
+
+        form(action="/logout", method="post")
+          button(type="submit") Odjava
+      else
+        h2 Korisnički račun
+        p Za upravljanje propusnicama potrebna je prijava.
+
+        a(href="/login") Prijava
+
+        
+

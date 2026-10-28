@@ -4,6 +4,7 @@ import { pool } from "./database.js";
 import { getPassById } from "./passes.js";
 import { isValidUuid } from "./validation.js";
 import path from "node:path";
+import { authMiddleware, requiresAuth } from "./auth.js";
 
 
 const app = express();
@@ -12,6 +13,7 @@ const PORT = 3000;
 
 app.set("view engine", "pug");
 app.set("views", path.resolve("views"));
+app.use(authMiddleware);
 
 
 app.get("/", async (req, res) => {
@@ -26,7 +28,14 @@ app.get("/", async (req, res) => {
     const total = Number(result.rows[0].total);
     const active = Number(result.rows[0].active);
 
-    res.render("home", { total, active });
+    
+    res.render("home", {
+      total,
+      active,
+      isAuthenticated: req.oidc.isAuthenticated(),
+      user: req.oidc.user
+    });
+
 
   } catch (error) {
     console.error("Greška pri dohvaćanju statistike:", error);
@@ -58,6 +67,20 @@ app.get("/info/:id", async (req, res) => {
     console.error("Greška pri dohvaćanju propusnice:", error);
     res.status(500).send("Greška na serveru.");
   }
+});
+
+
+app.post("/logout", (req, res) => {
+  res.oidc.logout({
+    returnTo: process.env.BASE_URL
+  });
+});
+
+
+app.get("/profile", requiresAuth(), (req, res) => {
+  const user = req.oidc.user;
+
+  res.render("profile", { user });
 });
 
 

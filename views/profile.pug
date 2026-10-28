@@ -1,0 +1,24 @@
+
+doctype html
+html(lang="hr")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Korisnički profil
+
+  body
+    h1 Korisnički profil
+
+    p
+      strong Ime:
+      |  #{user.name || "Nije dostupno"}
+
+    p
+      strong Email:
+      |  #{user.email || "Nije dostupan"}
+
+    p
+      strong ID korisnika:
+      |  #{user.sub}
+
+    a(href="/") Povratak na početnu
