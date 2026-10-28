@@ -11,7 +11,8 @@ if (!issuer || !audience) {
 const issuerUrl = new URL(issuer.endsWith("/") ? issuer : issuer + "/");
 
 const JWKS = createRemoteJWKSet(
-  new URL(".well-known/jwks.json", issuerUrl)
+  new URL(".well-known/jwks.json", issuerUrl),
+  { timeoutDuration: 15000, cooldownDuration: 30000, cacheMaxAge: 600000 }
 );
 
 export function requireScope(scope: string): RequestHandler {
@@ -44,6 +45,13 @@ export function requireScope(scope: string): RequestHandler {
 
       next();
     } catch (error) {
+      // Nedostupnost Auth0 JWKS-a nije pogreška klijentova tokena.
+      if (error instanceof Error &&
+          (error.name === "JWKSTimeout" || error.name === "JWKSRequestFailed")) {
+        console.error("Auth0 JWKS privremeno nedostupan:", error);
+        res.sendStatus(503);
+        return;
+      }
       console.error("Nevaljan pristupni token:", error);
       res.sendStatus(401);
     }
